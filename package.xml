@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>amcl</name>
+  <name>amcl_start_localizer</name>
   <version>0.0.0</version>
   <description>AMCL implementation to estimate the 2D pose of a robot in a given map.</description>
   <maintainer email="email@mail.com">Alejandro</maintainer>
