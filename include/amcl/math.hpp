@@ -1,6 +1,6 @@
 #pragma once
 
-#include "include/amcl/math.h"
+#include "amcl/math.h"
 
 template <typename T>
 amcl::math::Transform2D<T>::Transform2D()
@@ -132,18 +132,3 @@ std::ostream& amcl::math::operator<<(std::ostream& t_stream, const amcl::math::T
     t_stream << t_transform.homogeneous().format(eigenFmt);
     return t_stream;
 }
-
-/** Conversion from amcl::math::Transform2D<S> to amcl::math::Transform2D<T>
- */
-template <typename S, typename T>
-struct cc::util::ToImpl<amcl::math::Transform2D<S>, amcl::math::Transform2D<T>,
-                        typename std::enable_if<std::is_convertible<S, T>::value>::type>
-{
-    static inline void to(const amcl::math::Transform2D<S>& src, amcl::math::Transform2D<T>& tgt)
-    {
-        Eigen::Matrix<T, 2, 1> tran = src.translation().template cast<T>();
-        Eigen::Rotation2D<T> rot = src.rotation().template cast<T>();
-
-        tgt = amcl::math::Transform2D<T>{tran, rot};
-    }
-};
