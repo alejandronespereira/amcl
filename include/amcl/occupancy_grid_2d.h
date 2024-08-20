@@ -51,7 +51,6 @@ class OccupancyGrid2D
                                                                   double yaw) const;
 };
 
-double similarity(const OccupancyGrid2D &source, const OccupancyGrid2D &target);
 }  // namespace amcl
 
 #include "amcl/occupancy_grid_2d.hpp"

@@ -5,6 +5,7 @@
 
 #include "amcl/math.h"
 #include "amcl/occupancy_grid_2d.h"
+#include "amcl/particle.h"
 
 #include "stdlib.h"
 
