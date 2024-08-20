@@ -4,11 +4,14 @@
 #include "sensor_msgs/msg/laser_scan.hpp"
 
 #include "amcl/math.h"
+#include "amcl/occupancy_grid_2d.h"
+
+#include "stdlib.h"
 
 class AMCLNode : public rclcpp::Node
 {
   public:
-    AMCLNode() : Node("sensor_subscriber_node")
+    AMCLNode() : Node("amcl_start_localizer")
     {
         // Subscribe to /map topic
         map_subscription_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
@@ -16,7 +19,7 @@ class AMCLNode : public rclcpp::Node
 
         // Subscribe to /scan topic
         scan_subscription_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
-            "/scan", 10, std::bind(&AMCLNode::scanCallback, this, std::placeholders::_1));
+            "/gazebo_sim/scan", 10, std::bind(&AMCLNode::scanCallback, this, std::placeholders::_1));
 
         // Subscribe to /odom topic
         odom_subscription_ = this->create_subscription<nav_msgs::msg::Odometry>(
@@ -28,6 +31,9 @@ class AMCLNode : public rclcpp::Node
     void mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
     {
         RCLCPP_INFO(this->get_logger(), "Received /map data");
+        auto mapGrid = amcl::OccupancyGrid2D(*msg);
+
+        mapGrid.writeMapToFile("/home/alejandro/map.txt");
         // Process map data here
     }
 
@@ -35,6 +41,11 @@ class AMCLNode : public rclcpp::Node
     void scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
     {
         RCLCPP_INFO(this->get_logger(), "Received /scan data");
+        auto scanGrid = amcl::OccupancyGrid2D(*msg, 0.25);
+        scanGrid.writeMapToFile("/home/alejandro/scan_grid.txt");
+
+        exit(0);
+
         // Process scan data here
     }
 
