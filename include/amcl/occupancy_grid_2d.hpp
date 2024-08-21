@@ -16,6 +16,30 @@ double getYawFromQuaternion(const geometry_msgs::msg::Quaternion &quat)
     return std::atan2(siny_cosp, cosy_cosp);
 }
 
+amcl::OccupancyGrid2D::OccupancyGrid2D() {}
+
+amcl::OccupancyGrid2D::OccupancyGrid2D(const OccupancyGrid2D &other)
+{
+    this->m_width = other.m_width;
+    this->m_height = other.m_height;
+    this->m_transform = other.m_transform;
+    this->m_inverse = other.m_inverse;
+    this->m_resolution = other.m_resolution;
+    this->m_grid = other.m_grid;
+}
+
+amcl::OccupancyGrid2D amcl::OccupancyGrid2D::operator=(const OccupancyGrid2D &other)
+{
+    this->m_width = other.m_width;
+    this->m_height = other.m_height;
+    this->m_transform = other.m_transform;
+    this->m_inverse = other.m_inverse;
+    this->m_resolution = other.m_resolution;
+    this->m_grid = other.m_grid;
+
+    return *this;
+}
+
 Eigen::Matrix<double, 3, 3> amcl::OccupancyGrid2D::computeCoordinatesToCellTransform(double resolution, double cx,
                                                                                      double cy, double yaw) const
 {
@@ -154,6 +178,23 @@ bool amcl::OccupancyGrid2D::isValidCell(int x, int y) const
 size_t amcl::OccupancyGrid2D::width() const { return this->m_width; }
 
 size_t amcl::OccupancyGrid2D::height() const { return this->m_height; };
+
+std::vector<std::pair<size_t, size_t>> amcl::OccupancyGrid2D::getFreeCells() const
+{
+    std::vector<std::pair<size_t, size_t>> res;
+    res.reserve(this->m_width * this->m_height);
+    for (size_t row = 0; row < this->m_height; row++)
+    {
+        for (size_t col = 0; col < this->m_width; col++)
+        {
+            if (this->m_grid[col][row] == static_cast<int8_t>(amcl::CellValue::FREE_SPACE))
+            {
+                res.push_back(std::pair<size_t, size_t>(col, row));
+            }
+        }
+    }
+    return res;
+}
 
 void amcl::OccupancyGrid2D::writeMapToFile(const std::string &filePath) const
 {
