@@ -20,11 +20,17 @@ enum class CellValue : int8_t
 class OccupancyGrid2D
 {
   public:
+    OccupancyGrid2D();
+
     // Constructor from a nav_msgs::msg::OccupancyGrid message
     OccupancyGrid2D(const nav_msgs::msg::OccupancyGrid &ros_grid);
 
     // Constructor from a sensor_msgs::msg::LaserScan message
     OccupancyGrid2D(const sensor_msgs::msg::LaserScan &ros_scan, double resolution);
+
+    OccupancyGrid2D(const OccupancyGrid2D &other);
+
+    OccupancyGrid2D operator=(const OccupancyGrid2D &other);
 
     size_t width() const;
 
@@ -37,6 +43,8 @@ class OccupancyGrid2D
     int8_t getCellValueAtLocalCoordinates(const Eigen::Vector2d &coordinates) const;
 
     Eigen::Vector2d getLocalCoordinatesForCell(const Eigen::Vector2d &coordinates) const;
+
+    std::vector<std::pair<size_t, size_t>> getFreeCells() const;
 
   private:
     bool isValidCell(int x, int y) const;

@@ -15,7 +15,10 @@ class Particle
      */
 
   public:
-    Particle(const amcl::math::Transform2D<double>& pose, std::shared_ptr<OccupancyGrid2D> grid);
+    Particle(const amcl::math::Transform2D<double>& pose, const amcl::OccupancyGrid2D& grid);
+
+    // Copy constructor with a pose
+    Particle(const Particle& other, const amcl::math::Transform2D<double>& pose);
 
     double& score();
 
@@ -23,9 +26,11 @@ class Particle
 
   private:
     amcl::math::Transform2D<double> m_pose;
-    std::shared_ptr<OccupancyGrid2D> m_grid;
+    amcl::OccupancyGrid2D m_grid;
     double m_score;
 };
+
+std::vector<Particle> sampleParticles(const OccupancyGrid2D& map, const OccupancyGrid2D& scan, int nCells);
 
 }  // namespace amcl
 
